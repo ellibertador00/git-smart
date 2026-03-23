@@ -10,6 +10,7 @@ import {
 } from "../lib/git";
 import { generateCommitSuggestion } from "../lib/ai";
 import { out } from "../lib/output";
+import { formatErrorMessage } from "../lib/errors";
 import { CommitSuggestion, ResolvedConfig } from "../types";
 
 interface AutoCommitOptions {
@@ -47,7 +48,8 @@ export async function autoCommit(
   let suggestion: CommitSuggestion;
   try {
     suggestion = await generateCommitSuggestion({ diff, files, branch, config });
-  } catch {
+  } catch (error) {
+    debugProviderError(error);
     out.warning("ai unavailable — using fallback");
     suggestion = {
       message: config.fallbackMessage,
@@ -73,4 +75,13 @@ function handleEmpty(options: AutoCommitOptions): null {
     out.info("nothing to commit");
   }
   return null;
+}
+
+function debugProviderError(error: unknown): void {
+  const flags = process.env.DEBUG_GT?.split(",").map((flag) => flag.trim().toLowerCase());
+  if (!flags?.includes("provider")) {
+    return;
+  }
+
+  out.error(formatErrorMessage(error));
 }

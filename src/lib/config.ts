@@ -11,14 +11,11 @@ const PROVIDER_KEYS: Record<Exclude<ProviderName, "mock">, string> = {
   openai: "OPENAI_API_KEY",
   gemini: "GEMINI_API_KEY",
 };
-const PROVIDER_DEFAULT_MODELS: Record<Exclude<ProviderName, "mock">, string> = {
-  openai: "gpt-4o-mini",
-  gemini: "gemini-1.5-pro",
-};
+const GEMINI_FALLBACK_MODEL = "gemini-3-flash-preview";
+const OPENAI_FALLBACK_MODEL = "gpt-4o";
 
 export const DEFAULT_CONFIG: AppConfig = {
   provider: "openai",
-  model: PROVIDER_DEFAULT_MODELS.openai,
   conventionalCommits: true,
   maxDiffBytes: 120_000,
   includeUntracked: true,
@@ -107,32 +104,26 @@ function resolveProviderConfig(provider: ProviderName, config: AppConfig): Provi
   }
 
   if (provider === "gemini") {
+    const geminiModel =
+      process.env.GEMINI_MODEL ?? getConfigModelForProvider("gemini", config) ?? GEMINI_FALLBACK_MODEL;
     return {
       name: "gemini",
       apiKey: process.env.GEMINI_API_KEY,
       baseUrl: process.env.GEMINI_BASE_URL,
-      model: resolveModel("gemini", config, process.env.GEMINI_MODEL),
+      model: geminiModel,
     };
   }
 
+  const openaiModel =
+    process.env.OPENAI_MODEL ?? getConfigModelForProvider("openai", config) ?? OPENAI_FALLBACK_MODEL;
   return {
     name: "openai",
     apiKey: process.env.OPENAI_API_KEY,
     baseUrl: process.env.OPENAI_BASE_URL,
-    model: resolveModel("openai", config, process.env.OPENAI_MODEL),
+    model: openaiModel,
   };
 }
 
-function resolveModel(
-  provider: Exclude<ProviderName, "mock">,
-  config: AppConfig,
-  envOverride?: string
-): string {
-  if (envOverride) {
-    return envOverride;
-  }
-  if (config.provider === provider && config.model) {
-    return config.model;
-  }
-  return PROVIDER_DEFAULT_MODELS[provider];
+function getConfigModelForProvider(provider: ProviderName, config: AppConfig): string | undefined {
+  return config.provider === provider ? config.model : undefined;
 }

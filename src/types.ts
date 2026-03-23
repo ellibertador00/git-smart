@@ -2,7 +2,7 @@ export type ProviderName = "openai" | "gemini" | "mock";
 
 export interface AppConfig {
   provider: ProviderName;
-  model: string;
+  model?: string;
   conventionalCommits: boolean;
   maxDiffBytes: number;
   includeUntracked: boolean;

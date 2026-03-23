@@ -4,6 +4,20 @@ import { createProvider, CommitMessageProvider } from "../providers";
 const MAX_COMMIT_LENGTH = 72;
 const suggestionCache = new Map<string, CommitSuggestion>();
 
+function providerDebugEnabled(): boolean {
+  return (process.env.DEBUG_GT ?? "")
+    .split(",")
+    .map((flag) => flag.trim().toLowerCase())
+    .includes("provider");
+}
+
+function logProviderDebug(message: string): void {
+  if (!providerDebugEnabled()) {
+    return;
+  }
+  console.error(`[provider] ${message}`);
+}
+
 interface GenerateParams {
   diff: DiffSummary;
   files: string[];
@@ -22,7 +36,12 @@ export async function generateCommitSuggestion(params: GenerateParams): Promise<
   const provider = params.provider ?? createProvider(params.config.providerConfig);
   const prompt = buildPrompt(params);
   const raw = await provider.generateCommitMessage(prompt);
+  logProviderDebug(`model=${params.config.providerConfig.model ?? "(none)"}`);
+  logProviderDebug(`raw response: ${raw}`);
   const message = sanitizeCommitMessage(raw, params.config.fallbackMessage);
+  if (message === params.config.fallbackMessage) {
+    logProviderDebug("sanitized output fell back to fallback message");
+  }
   const result: CommitSuggestion = {
     message,
     source: message === params.config.fallbackMessage ? "fallback" : "ai",
