@@ -1,5 +1,4 @@
-                                       # gt — Lightning-fast Git companion
-
+<h1 align="center">gt — Lightning-fast Git companion</h1>
 <p align="center">If you find this project useful, consider giving it a ⭐.</p>
 
 <p align="center"><strong>Fast, minimal CLI for AI-assisted Git commits.</strong></p>
