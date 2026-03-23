@@ -1,0 +1,55 @@
+{
+  "name": "gt-smart",
+  "version": "0.1.0",
+  "description": "Fast CLI for AI-assisted Git commits and smart push",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "gt": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup --config tsup.config.ts && node scripts/fix-shebang.mjs",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "picocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsup": "^8.0.2",
+    "tsx": "^4.11.2",
+    "typescript": "^5.9.3",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "git",
+    "cli",
+    "ai",
+    "commit",
+    "smart-push",
+    "devtools",
+    "productivity",
+    "terminal",
+    "openai",
+    "gemini",
+    "automation",
+    "git-commit",
+    "workflow",
+    "developer-tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourname/gt"
+  },
+  "packageManager": "npm@10.5.0"
+}

@@ -1,0 +1,41 @@
+# dependencies
+node_modules
+
+# output
+out
+dist
+dist-*
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+coverage/**
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.local
+.env.*
+!.env.example
+
+# git config files
+.gtrc.json
+.gtrc.local.json
+gt.config.json
+gt.config.local.json
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
