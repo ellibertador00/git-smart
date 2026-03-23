@@ -11,6 +11,8 @@ const TEMP_ROOT = "/tmp";
 const resetProviderEnv = () => {
   delete process.env.OPENAI_API_KEY;
   delete process.env.GEMINI_API_KEY;
+  delete process.env.OPENAI_MODEL;
+  delete process.env.GEMINI_MODEL;
   delete process.env.GT_PROVIDER;
 };
 
@@ -49,6 +51,7 @@ describe("loadConfig", () => {
     const config = await loadConfig(dir);
     expect(config.provider).toBe(DEFAULT_CONFIG.provider);
     expect(config.providerConfig.name).toBe(DEFAULT_CONFIG.provider);
+    expect(config.providerConfig.model).toBe("gpt-4o");
   });
 
   it("auto-detects openai when only OPENAI_API_KEY is set", async () => {
@@ -58,6 +61,7 @@ describe("loadConfig", () => {
     const config = await loadConfig(dir);
     expect(config.provider).toBe("openai");
     expect(config.providerConfig.name).toBe("openai");
+    expect(config.providerConfig.model).toBe("gpt-4o");
   });
 
   it("auto-detects gemini when only GEMINI_API_KEY is set", async () => {
@@ -67,7 +71,7 @@ describe("loadConfig", () => {
     const config = await loadConfig(dir);
     expect(config.provider).toBe("gemini");
     expect(config.providerConfig.name).toBe("gemini");
-    expect(config.providerConfig.model).toBe("gemini-1.5-pro");
+    expect(config.providerConfig.model).toBe("gemini-3-flash-preview");
   });
 
   it("uses custom model from config when provider matches", async () => {
@@ -81,6 +85,19 @@ describe("loadConfig", () => {
     const config = await loadConfig(dir);
     expect(config.provider).toBe("gemini");
     expect(config.providerConfig.model).toBe("custom-gemini");
+  });
+
+  it("ignores config model when provider differs", async () => {
+    const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
+    tempDirs.push(dir);
+    writeFileSync(
+      join(dir, ".gtrc.json"),
+      JSON.stringify({ provider: "openai", model: "gpt-4o-mini" })
+    );
+    process.env.GEMINI_API_KEY = "zzz";
+    const config = await loadConfig(dir);
+    expect(config.provider).toBe("gemini");
+    expect(config.providerConfig.model).toBe("gemini-3-flash-preview");
   });
 
   it("honors GT_PROVIDER when multiple keys are present", async () => {

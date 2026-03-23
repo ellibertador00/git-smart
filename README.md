@@ -1,4 +1,4 @@
-# gt — Lightning-fast Git companion
+# gt — Lightning-fast Git companion 
 
 <p align="center">If you find this project useful, consider giving it a ⭐.</p>
 

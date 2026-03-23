@@ -1,6 +1,6 @@
 {
   "name": "gt-smart",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fast CLI for AI-assisted Git commits and smart push",
   "license": "MIT",
   "main": "./dist/index.js",
