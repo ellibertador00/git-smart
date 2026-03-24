@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
-import { buildPrompt, generateCommitSuggestion } from "../src/lib/ai";
+import { __clearSuggestionCache, buildPrompt, generateCommitSuggestion } from "../src/lib/ai";
 import { CommitMessageProvider } from "../src/providers";
 import { DiffSummary, ResolvedConfig } from "../src/types";
 import { DEFAULT_CONFIG } from "../src/lib/config";
@@ -29,6 +29,10 @@ const baseConfig: ResolvedConfig = {
 };
 
 describe("generateCommitSuggestion", () => {
+  beforeEach(() => {
+    __clearSuggestionCache();
+  });
+
   it("defaults to plain commit messages", () => {
     expect(DEFAULT_CONFIG.conventionalCommits).toBe(false);
   });

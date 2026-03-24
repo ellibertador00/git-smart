@@ -4,6 +4,10 @@ import { createProvider, CommitMessageProvider } from "../providers";
 const MAX_COMMIT_LENGTH = 72;
 const suggestionCache = new Map<string, CommitSuggestion>();
 
+export function __clearSuggestionCache(): void {
+  suggestionCache.clear();
+}
+
 function providerDebugEnabled(): boolean {
   return (process.env.DEBUG_GT ?? "")
     .split(",")
@@ -150,6 +154,14 @@ export function sanitizeCommitMessage(raw: string, fallbackOrParams: string | Ge
   const withoutTrailingPeriod = singleLine.length > 1 && singleLine.endsWith(".")
     ? singleLine.slice(0, -1)
     : singleLine;
+
+  if (!params) {
+    if (withoutTrailingPeriod.length <= MAX_COMMIT_LENGTH) {
+      return withoutTrailingPeriod;
+    }
+
+    return `${withoutTrailingPeriod.slice(0, MAX_COMMIT_LENGTH - 3).trimEnd()}...`;
+  }
 
   const normalizedStyle = normalizeCommitStyle(withoutTrailingPeriod, conventionalCommits);
   const improved = improveLowSignalMessage(

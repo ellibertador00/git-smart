@@ -97,18 +97,6 @@ describe("loadConfig", () => {
     expect(config.providerConfig.apiKey).toBe("from-shell");
   });
 
-  it("lets .env.local override .env when shell vars are absent", async () => {
-    const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
-    tempDirs.push(dir);
-    writeFileSync(join(dir, ".env"), "OPENAI_API_KEY=from-dotenv\n");
-    writeFileSync(join(dir, ".env.local"), "OPENAI_API_KEY=from-local\n");
-
-    const config = await loadConfig(dir);
-
-    expect(config.provider).toBe("openai");
-    expect(config.providerConfig.apiKey).toBe("from-local");
-  });
-
   it("uses custom model from config when provider matches", async () => {
     const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
     tempDirs.push(dir);

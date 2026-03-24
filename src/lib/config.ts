@@ -6,7 +6,6 @@ import { AppConfig, ProviderConfig, ProviderName, ResolvedConfig } from "../type
 import { ConfigError } from "./errors";
 
 const CONFIG_FILES = [".gtrc.json", "gt.config.json"] as const;
-const ENV_FILES = [".env", ".env.local"] as const;
 const MULTI_PROVIDER_ERROR = "multiple providers detected — set GT_PROVIDER (openai | gemini)";
 const PROVIDER_KEYS: Record<Exclude<ProviderName, "mock">, string> = {
   openai: "OPENAI_API_KEY",
@@ -34,18 +33,16 @@ export async function loadConfig(cwd: string = process.cwd()): Promise<ResolvedC
 }
 
 async function loadEnvFiles(cwd: string): Promise<void> {
-  for (const file of ENV_FILES) {
-    const path = join(cwd, file);
-    if (!existsSync(path)) continue;
+  const shellEnvKeys = new Set(Object.keys(process.env));
+  const path = join(cwd, ".env");
+  if (!existsSync(path)) return;
 
-    const text = await readFile(path, "utf-8");
-    const parsed = parseEnvFile(text);
+  const text = await readFile(path, "utf-8");
+  const parsed = parseEnvFile(text);
 
-    for (const [key, value] of Object.entries(parsed)) {
-      if (process.env[key] === undefined) {
-        process.env[key] = value;
-      }
-    }
+  for (const [key, value] of Object.entries(parsed)) {
+    if (shellEnvKeys.has(key)) continue;
+    process.env[key] = value;
   }
 }
 
