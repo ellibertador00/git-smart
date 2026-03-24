@@ -49,7 +49,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourname/gt"
+    "url": "git+https://github.com/ellibertador00/git-smart.git"
   },
   "packageManager": "npm@10.5.0"
 }

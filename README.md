@@ -6,7 +6,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/gt-smart"><img src="https://img.shields.io/npm/v/gt-smart.svg" alt="npm version" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="license" /></a>
-  <a href="../../pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="prs" /></a>
+  <a href="https://github.com/ellibertador00/git-smart/pulls"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="prs" /></a>
 </p>
 
 ## Features
