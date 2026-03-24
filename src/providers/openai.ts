@@ -23,8 +23,8 @@ export class OpenAIProvider implements CommitMessageProvider {
       },
       body: JSON.stringify({
         model: this.config.model,
-        temperature: 0.2,
-        max_tokens: 120,
+        temperature: 0.4,
+        max_tokens: 200,
         messages: [
           { role: "system", content: prompt.system },
           { role: "user", content: prompt.user },

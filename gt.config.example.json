@@ -1,9 +1,9 @@
 {
   "provider": "openai",
   "model": "gpt-4o-mini",
-  "conventionalCommits": true,
+  "conventionalCommits": false,
   "maxDiffBytes": 120000,
   "includeUntracked": true,
-  "fallbackMessage": "chore: update project files",
+  "fallbackMessage": "update project files",
   "pushRemote": "origin"
 }

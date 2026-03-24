@@ -28,8 +28,8 @@ export class GeminiProvider implements CommitMessageProvider {
         contents: [{ role: "user", parts: [{ text: prompt.user }] }],
         systemInstruction: { parts: [{ text: prompt.system }] },
         generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 120,
+          temperature: 0.4,
+          maxOutputTokens: 200,
         },
       }),
     });

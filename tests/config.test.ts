@@ -74,6 +74,41 @@ describe("loadConfig", () => {
     expect(config.providerConfig.model).toBe("gemini-3-flash-preview");
   });
 
+  it("loads provider keys from .env", async () => {
+    const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
+    tempDirs.push(dir);
+    writeFileSync(join(dir, ".env"), "GEMINI_API_KEY=env-gemini\n");
+
+    const config = await loadConfig(dir);
+
+    expect(config.provider).toBe("gemini");
+    expect(config.providerConfig.apiKey).toBe("env-gemini");
+  });
+
+  it("lets shell environment override .env values", async () => {
+    const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
+    tempDirs.push(dir);
+    writeFileSync(join(dir, ".env"), "OPENAI_API_KEY=from-dotenv\n");
+    process.env.OPENAI_API_KEY = "from-shell";
+
+    const config = await loadConfig(dir);
+
+    expect(config.provider).toBe("openai");
+    expect(config.providerConfig.apiKey).toBe("from-shell");
+  });
+
+  it("lets .env.local override .env when shell vars are absent", async () => {
+    const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
+    tempDirs.push(dir);
+    writeFileSync(join(dir, ".env"), "OPENAI_API_KEY=from-dotenv\n");
+    writeFileSync(join(dir, ".env.local"), "OPENAI_API_KEY=from-local\n");
+
+    const config = await loadConfig(dir);
+
+    expect(config.provider).toBe("openai");
+    expect(config.providerConfig.apiKey).toBe("from-local");
+  });
+
   it("uses custom model from config when provider matches", async () => {
     const dir = mkdtempSync(join(TEMP_ROOT, "gt-config-"));
     tempDirs.push(dir);
